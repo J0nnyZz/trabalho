@@ -29,3 +29,22 @@ def test_sum_route() -> None:
 
     assert response.status_code == 200
     assert response.get_json() == {"result": 12}
+
+
+def test_sum_negative_numbers() -> None:
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/sum/-3/-2")
+
+    assert response.status_code == 200
+    assert response.get_json() == {"result": -5}
+
+
+def test_not_found_route() -> None:
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/not-exist")
+
+    assert response.status_code == 404

@@ -1,0 +1,24 @@
+name: Alerta no Discord
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  send_alert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar alerta para o Discord
+        uses: appleboy/discord-action@v1.0.0
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          message: |
+            🚨 Novo commit ou PR no repositório!
+            Autor: ${{ github.actor }}
+            Branch: ${{ github.ref }}
+            Mensagem: ${{ github.event.head_commit && github.event.head_commit.message || github.event.pull_request && github.event.pull_request.title || 'Sem mensagem' }}
