@@ -1,0 +1,22 @@
+name: Alerta no Discord
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  send_alert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar alerta para o Discord
+        uses: Ilshidur/action-discord@master
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          message: |
+            🚨 Novo commit ou PR no repositório!
+            Autor: ${{ github.actor }}
+            Branch: ${{ github.ref }}
+            Mensagem: ${{ github.event.head_commit.message || github.event.pull_request.title }}
